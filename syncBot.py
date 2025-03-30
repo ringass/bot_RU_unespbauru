@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright
-from bd import show_usuario
+from info.bd import show_usuario
 
 def pagina(page):
     
