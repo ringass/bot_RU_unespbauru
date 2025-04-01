@@ -14,6 +14,9 @@ def adicionar_usuario_view():
     username = request.form['username']
     password = request.form['password']
     preference = request.form['preference']
+    janta = request.form.getlist('janta') or None
+    almoco = request.form.getlist('almoco') or None
+    
     
     inserir_usuario(username, password, preference)
     

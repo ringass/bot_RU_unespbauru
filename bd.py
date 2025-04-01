@@ -35,15 +35,16 @@ def create_table():
         id SERIAL PRIMARY KEY,
         username TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
-        preference TEXT NOT NULL
+        preference_almoco TEXT[] DEFAULT NULL,  
+        preference_janta TEXT[] DEFAULT NULL     
     )
-    ''')
+''')
     
     con.commit()
     con.close()
     
 
-def inserir_usuario(username, password, preference):
+def inserir_usuario(username, password, preference, janta, almoco):
     con = connect()
     cursor = con.cursor()
     
@@ -52,7 +53,7 @@ def inserir_usuario(username, password, preference):
         print(f"O usuário {username} já existe no banco de dados.")
     else:
         SS = criptografar(password)
-        cursor.execute("INSERT INTO contas (username, password, preference) VALUES (%s, %s, %s)", (username, SS, preference))
+        cursor.execute("INSERT INTO contas (username, password, preference, janta, almoco) VALUES (%s, %s, %s, %s, %s)", (username, SS, preference, janta, almoco))
         print(f"Usuário {username} inserido com sucesso.")
     
     con.commit()
@@ -65,8 +66,6 @@ def inserir_usuario(username, password, preference):
     con.close()
     print("Connection closed.")
     
-
-# inserir_usuario("tomaz.gonzaga", "Gonzaga10", "almoco") #coneção com front para receber de algum lugar e inserir
 
 def show_usuario():
     con = connect()
@@ -81,10 +80,10 @@ def show_usuario():
     
     usuarios = []
     
-    # Descriptografar a senha antes de retornar para o bot
+    
     for usuario, senha_criptografada, preferencia in contas:
-        # Aqui você vai descriptografar a senha
-        senha = descriptografar(senha_criptografada)  # Troque "sua_senha_secreta" pela chave usada na criptografia
+        
+        senha = descriptografar(senha_criptografada)  
         usuarios.append((usuario, senha, preferencia))
     
     return usuarios

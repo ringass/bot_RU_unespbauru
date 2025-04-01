@@ -105,8 +105,7 @@ def login(page, username: str, password: str):
     page.click('[name="button_entrar"]')
     page.wait_for_timeout(5000)
 
-def verifica_dinheiro(page):
-    
+def verifica_dinheiro(page, almoco, janta):
     page.wait_for_selector('[href="/ru-bauru/dashboard/dashboard.do"]')
     page.click('[href="/ru-bauru/dashboard/dashboard.do"]')
 
@@ -114,71 +113,86 @@ def verifica_dinheiro(page):
     preco_texto = page.locator(".card-subtitle").nth(1).text_content()
     preco_limpo = preco_texto.replace("R$", "").strip().replace(",", ".")
     preco = float(preco_limpo)
-    
-    if preco >= 25.00:
-        print(f"Saldo suficiente para janta e almoço: R$ {preco:.2f}")
-        return 2
-    else:
-        print(f"Saldo insuficiente para janta e almoço: R$ {preco:.2f}")
 
-        if preco >= 12:
-            print("Comprar apenas um periodo") 
-            return 1
-        else:
-            print("Operacao cancelada")
-            return 0
+    
+    dias_almoco = len(almoco) if almoco else 0
+    dias_janta = len(janta) if janta else 0
+    dias_totais = dias_almoco + dias_janta
+    
+    
+    preco_total = dias_totais * 2.50
+    
+    if preco >= preco_total:
+        print(f"Saldo suficiente para {dias_totais} refeição(ões): R$ {preco:.2f} disponível, R$ {preco_total:.2f} necessário.")
+        return True
+    else:
+        print(f"Saldo insuficiente: R$ {preco:.2f} disponível, R$ {preco_total:.2f} necessário.")
+        return False
         
 
-def acessar_RU(page, preferencia):
-    
+def acessar_RU(page, preferencia, almoco, janta):
     page.wait_for_selector('[href="https://sistemas.unesp.br/ru-bauru"]')
     page.click('[href="https://sistemas.unesp.br/ru-bauru"]')
     page.wait_for_timeout(5000)
 
-    selecao = verifica_dinheiro(page)
-    
-    page.wait_for_selector('[href="/ru-bauru/cliente/selecionarFilaPorPeriodoDeAtendimento.do"]')
-    page.click('[href="/ru-bauru/cliente/selecionarFilaPorPeriodoDeAtendimento.do"]')
-
-    if selecao > 0:
-        print("Pode continuar com a reserva da refeição.")
-        comprar_fila(page, preferencia)     
+    if verifica_dinheiro(page, almoco, janta):
+        print("Saldo suficiente para continuar.")
+        comprar_fila(page, preferencia, almoco, janta)     
     else:
         print("Recarregar saldo antes de prosseguir.")
-        
-        
-def comprar_fila(page, periodo):
+
+def comprar_refeicao(page, periodo):
+    
+    period_map = {
+        "almoco": 0,
+        "janta": 1
+    }
+    
     periodo = periodo.lower()
     
-    if periodo in ["almoço", "almoco"]:
-        period_selector = "#form\\:j_idt26\\:0\\:j_idt27"
-    elif periodo in ["jantar", "janta"]:
-        period_selector = "#form\\:j_idt26\\:1\\:j_idt27"
+    if periodo not in period_map:
+        print(f"Período {periodo} inválido!")
+        return
+
+    period_index = period_map[periodo]
     
+    period_selector = f"#form\\:j_idt26\\:{period_index}\\:j_idt27"
     
     page.wait_for_selector(period_selector, state="visible", timeout=30000)
     page.click(period_selector)
     
-    
     page.wait_for_selector("#form\\:informacoes", state="visible", timeout=None)
 
+def comprar_fila(page, periodo, almoco, janta):
+    periodo = periodo.lower()
+
+    if periodo in ["almoco", "almoço"]:
+        comprar_refeicao(page, "almoco")
+        
+        if janta:  
+            comprar_refeicao(page, "janta")
     
-def main(username: str, password: str, preferencia: str):
-    
+    elif periodo in ["jantar", "janta"]:
+        comprar_refeicao(page, "janta")
+        
+        if almoco:  
+            comprar_refeicao(page, "almoco")  
+        
+  
+def main(username: str, password: str, preferencia: str, almoco, janta):
     with sync_playwright() as p:
         browser = p.firefox.launch(headless=False)
         page = browser.new_page()
 
         pagina(page)  
         login(page, username, password)  
-        acessar_RU(page, preferencia)
+        acessar_RU(page, preferencia, almoco, janta)
         
         print(page.title())  
         browser.close()
 
 
-for usuario, senha, preferencia in show_usuario():
-    main(usuario, senha, preferencia) #user, password, preference
-    
+for usuario, senha, preferencia, almoco, janta in show_usuario():
+    main(usuario, senha, preferencia, almoco, janta)
     
     

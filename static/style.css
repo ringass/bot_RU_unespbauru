@@ -7,6 +7,7 @@ body{
 
 .container {
     display: flex;
+    margin-top: -50px;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -65,4 +66,22 @@ h1 {
     font-optical-sizing: auto;
     font-weight: 600;
     font-style: normal;
+}
+
+.checkbox-group {
+    display: flex;
+    justify-content: center; /* Centraliza os checkboxes */
+    align-items: center;
+    gap: 15px; /* Adiciona espaçamento entre os checkboxes */
+    flex-wrap: wrap; /* Permite que os elementos quebrem linha, se necessário */
+    margin-top: 10px;
+    margin-bottom: 10px; /* Ajuste de espaçamento */
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 18px; /* Aumenta o tamanho da fonte */
+    font-family: "Oswald", sans-serif;  
 }
