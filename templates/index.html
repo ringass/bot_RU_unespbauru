@@ -1,72 +1,128 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A</title>
-    <link rel="stylesheet" href="../static/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
     <script>
-        function validateForm() {
-            let jantaSelected = document.querySelectorAll('input[name="janta[]"]:checked');
-            let almocoSelected = document.querySelectorAll('input[name="almoco[]"]:checked');
-    
-            
-            console.log("Janta Selecionada:", Array.from(jantaSelected).map(input => input.value));
-            console.log("Almoço Selecionado:", Array.from(almocoSelected).map(input => input.value));
-    
-            
-            if (jantaSelected.length === 0 && almocoSelected.length === 0) {
-                alert("por favor, selecione pelo menos um dia para a compra");
-                return false;  
-            }
-    
-            
-            alert("enviando o formulario!");
-            return true;  
+      function validateForm() {
+        let jantaSelected = document.querySelectorAll(
+          'input[name="janta[]"]:checked'
+        );
+        let almocoSelected = document.querySelectorAll(
+          'input[name="almoco[]"]:checked'
+        );
+
+        console.log(
+          "Janta Selecionada:",
+          Array.from(jantaSelected).map((input) => input.value)
+        );
+        console.log(
+          "Almoço Selecionado:",
+          Array.from(almocoSelected).map((input) => input.value)
+        );
+
+        if (jantaSelected.length === 0 && almocoSelected.length === 0) {
+          alert("por favor, selecione pelo menos um dia para a compra");
+          return false;
         }
+
+        alert("enviando o formulario!");
+        return true;
+      }
     </script>
-</head>
-<body>
-    
+  </head>
+  <body>
     <div class="container">
-        <h1>BOT BCC FODAO</h1>
-        <div class="form-container">
-            <h2>Infos do R.U</h2>
-            <form action="/adicionar_usuario" method="POST" onsubmit="return validateForm()">
-                <input type="user" name="username" placeholder="Usuário" required><br>
-                <input type="password" name="password" placeholder="Senha" required><br>
-                <input type="text" name="preference" placeholder="Preferência" required><br>
-                
-                
-                <div class="meal-section">
-                    <h2>Janta</h2>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="janta[]" value="segunda"> Segunda</label>
-                        <label><input type="checkbox" name="janta[]" value="terca"> Terça</label>
-                        <label><input type="checkbox" name="janta[]" value="quarta"> Quarta</label>
-                        <label><input type="checkbox" name="janta[]" value="quinta"> Quinta</label>
-                        <label><input type="checkbox" name="janta[]" value="sexta"> Sexta</label>
-                    </div>
-                </div>
+      <h1>BOT BCC FODAO</h1>
+      <div class="form-container">
+        <h2>Infos do R.U</h2>
+        <form
+          action="/adicionar_usuario"
+          method="POST"
+          onsubmit="return validateForm()"
+        >
+          <input
+            type="user"
+            name="username"
+            placeholder="Usuário"
+            required
+          /><br />
+          <input
+            type="password"
+            name="password"
+            placeholder="Senha"
+            required
+          /><br />
+          <input
+            type="text"
+            name="preference"
+            placeholder="Preferência"
+            required
+          /><br />
 
-                <div class="meal-section">
-                    <h2>Almoço</h2>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="almoco[]" value="segunda"> Segunda</label>
-                        <label><input type="checkbox" name="almoco[]" value="terca"> Terça</label>
-                        <label><input type="checkbox" name="almoco[]" value="quarta"> Quarta</label>
-                        <label><input type="checkbox" name="almoco[]" value="quinta"> Quinta</label>
-                        <label><input type="checkbox" name="almoco[]" value="sexta"> Sexta</label>
-                    </div>
-                </div>
+          <div class="meal-section">
+            <h2>Almoço</h2>
+            <div class="checkbox-group">
+              <label
+                ><input type="checkbox" name="almoco[]" value="segunda" />
+                Segunda</label
+              >
+              <label
+                ><input type="checkbox" name="almoco[]" value="terca" />
+                Terça</label
+              >
+              <label
+                ><input type="checkbox" name="almoco[]" value="quarta" />
+                Quarta</label
+              >
+              <label
+                ><input type="checkbox" name="almoco[]" value="quinta" />
+                Quinta</label
+              >
+              <label
+                ><input type="checkbox" name="almoco[]" value="sexta" />
+                Sexta</label
+              >
+            </div>
+          </div>
 
-                <button type="submit">Entrar</button>
-            </form>
-        </div>
+          <div class="meal-section">
+            <h2>Janta</h2>
+            <div class="checkbox-group">
+              <label
+                ><input type="checkbox" name="janta[]" value="segunda" />
+                Segunda</label
+              >
+              <label
+                ><input type="checkbox" name="janta[]" value="terca" />
+                Terça</label
+              >
+              <label
+                ><input type="checkbox" name="janta[]" value="quarta" />
+                Quarta</label
+              >
+              <label
+                ><input type="checkbox" name="janta[]" value="quinta" />
+                Quinta</label
+              >
+              <label
+                ><input type="checkbox" name="janta[]" value="sexta" />
+                Sexta</label
+              >
+            </div>
+          </div>
+
+          <button type="submit">Entrar</button>
+        </form>
+      </div>
     </div>
-
-</body>
+  </body>
 </html>

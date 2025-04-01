@@ -123,7 +123,7 @@ def verifica_dinheiro(page, almoco, janta):
     preco_total = dias_totais * 2.50
     
     if preco >= preco_total:
-        print(f"Saldo suficiente para {dias_totais} refeição(ões): R$ {preco:.2f} disponível, R$ {preco_total:.2f} necessário.")
+        print(f"Saldo suficiente para {dias_totais} refeições: R$ {preco:.2f} disponível, R$ {preco_total:.2f} necessário.")
         return True
     else:
         print(f"Saldo insuficiente: R$ {preco:.2f} disponível, R$ {preco_total:.2f} necessário.")
@@ -131,12 +131,21 @@ def verifica_dinheiro(page, almoco, janta):
         
 
 def acessar_RU(page, preferencia, almoco, janta):
-    page.wait_for_selector('[href="https://sistemas.unesp.br/ru-bauru"]')
+    page.wait_for_selector('[href="https://sistemas.unesp.br/ru-bauru"]', timeout=10000)
     page.click('[href="https://sistemas.unesp.br/ru-bauru"]')
-    page.wait_for_timeout(5000)
+    
+    
+    # page.click('[href="/ru-bauru/dashboard/dashboard.do"]')
 
+    
+    
     if verifica_dinheiro(page, almoco, janta):
         print("Saldo suficiente para continuar.")
+        
+        page.wait_for_selector('[href="/ru-bauru/cliente/selecionarFilaPorPeriodoDeAtendimento.do"]', timeout=10000)
+        page.click('[href="/ru-bauru/cliente/selecionarFilaPorPeriodoDeAtendimento.do"]')
+        time.sleep(2)
+        
         comprar_fila(page, preferencia, almoco, janta)     
     else:
         print("Recarregar saldo antes de prosseguir.")

@@ -44,7 +44,7 @@ def create_table():
     con.close()
     
 
-def inserir_usuario(username, password, preference, janta, almoco):
+def inserir_usuario(username, password, preference, almoco, janta):
     con = connect()
     cursor = con.cursor()
     
@@ -53,7 +53,7 @@ def inserir_usuario(username, password, preference, janta, almoco):
         print(f"O usuário {username} já existe no banco de dados.")
     else:
         SS = criptografar(password)
-        cursor.execute("INSERT INTO contas (username, password, preference, janta, almoco) VALUES (%s, %s, %s, %s, %s)", (username, SS, preference, janta, almoco))
+        cursor.execute("INSERT INTO contas (username, password, preference, janta, almoco) VALUES (%s, %s, %s, %s, %s)", (username, SS, preference, almoco, janta))
         print(f"Usuário {username} inserido com sucesso.")
     
     con.commit()
@@ -71,7 +71,7 @@ def show_usuario():
     con = connect()
     cursor = con.cursor()
     
-    cursor.execute("SELECT username, password, preference FROM contas")
+    cursor.execute("SELECT username, password, preference, janta, almoco FROM contas")
     contas = cursor.fetchall()
     
     con.commit()
@@ -81,10 +81,10 @@ def show_usuario():
     usuarios = []
     
     
-    for usuario, senha_criptografada, preferencia in contas:
+    for usuario, senha_criptografada, preferencia, almoco, janta in contas:
         
         senha = descriptografar(senha_criptografada)  
-        usuarios.append((usuario, senha, preferencia))
+        usuarios.append((usuario, senha, preferencia, almoco, janta))
     
     return usuarios
 
@@ -92,7 +92,8 @@ def show_usuario():
 
 usuarios = show_usuario()
 if usuarios:
-    for usuario, senha, preferencia in usuarios:
-        print(f"Usuário: {usuario}, Senha: {senha}, Preferência: {preferencia}")
+    for usuario, senha, preferencia, almoco, janta in usuarios:  
+        print(f"Usuário: {usuario}, Senha: {senha}, Preferência: {preferencia}, Almoco: {almoco}, Janta: {janta}")
 else:
     print("Nenhum usuário encontrado.")
+
