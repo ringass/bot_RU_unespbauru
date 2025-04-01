@@ -34,6 +34,21 @@
           return false;
         }
 
+        let username = document
+          .querySelector('input[name="username"]')
+          .value.trim();
+        let password = document
+          .querySelector('input[name="password"]')
+          .value.trim();
+        let preference = document
+          .querySelector('input[name="preference"]')
+          .value.trim();
+
+        if (username === "" || password === "" || preference === "") {
+          alert("Por favor, preencha todos os campos obrigatórios.");
+          return false;
+        }
+
         alert("enviando o formulario!");
         return true;
       }
@@ -41,7 +56,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>BOT BCC FODAO</h1>
+      <h1>BOT BCC</h1>
       <div class="form-container">
         <h2>Infos do R.U</h2>
         <form
@@ -52,19 +67,19 @@
           <input
             type="user"
             name="username"
-            placeholder="Usuário"
+            placeholder="Usuário -> R.U"
             required
           /><br />
           <input
             type="password"
             name="password"
-            placeholder="Senha"
+            placeholder="Senha -> R.U"
             required
           /><br />
           <input
             type="text"
             name="preference"
-            placeholder="Preferência"
+            placeholder="Preferência -> Almoço ou Janta"
             required
           /><br />
 
