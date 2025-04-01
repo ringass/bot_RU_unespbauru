@@ -1,6 +1,7 @@
 import psycopg2
 from dotenv import load_dotenv
 import os
+from cript import criptografar, descriptografar
 
 
 load_dotenv()
@@ -50,7 +51,8 @@ def inserir_usuario(username, password, preference):
     if cursor.fetchone():
         print(f"O usuário {username} já existe no banco de dados.")
     else:
-        cursor.execute("INSERT INTO contas (username, password, preference) VALUES (%s, %s, %s)", (username, password, preference))
+        SS = criptografar(password)
+        cursor.execute("INSERT INTO contas (username, password, preference) VALUES (%s, %s, %s)", (username, SS, preference))
         print(f"Usuário {username} inserido com sucesso.")
     
     con.commit()
@@ -64,7 +66,7 @@ def inserir_usuario(username, password, preference):
     print("Connection closed.")
     
 
-inserir_usuario("user", "senha", "preferencia") #coneção com front para receber de algum lugar e inserir
+# inserir_usuario("tomaz.gonzaga", "Gonzaga10", "almoco") #coneção com front para receber de algum lugar e inserir
 
 def show_usuario():
     con = connect()
@@ -76,7 +78,18 @@ def show_usuario():
     con.commit()
     
     con.close()
-    return contas
+    
+    usuarios = []
+    
+    # Descriptografar a senha antes de retornar para o bot
+    for usuario, senha_criptografada, preferencia in contas:
+        # Aqui você vai descriptografar a senha
+        senha = descriptografar(senha_criptografada)  # Troque "sua_senha_secreta" pela chave usada na criptografia
+        usuarios.append((usuario, senha, preferencia))
+    
+    return usuarios
+
+
 
 usuarios = show_usuario()
 if usuarios:

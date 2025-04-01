@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from bd import adicionar_usuario  
+from bd import inserir_usuario  
 
 app = Flask(__name__)
 
@@ -15,7 +15,7 @@ def adicionar_usuario_view():
     password = request.form['password']
     preference = request.form['preference']
     
-    adicionar_usuario(username, password, preference)
+    inserir_usuario(username, password, preference)
     
     return redirect(url_for('index'))
 
