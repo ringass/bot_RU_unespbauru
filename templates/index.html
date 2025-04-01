@@ -10,15 +10,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <script>
         function validateForm() {
+            let jantaSelected = document.querySelectorAll('input[name="janta[]"]:checked');
+            let almocoSelected = document.querySelectorAll('input[name="almoco[]"]:checked');
+    
             
-            let jantaSelected = document.querySelectorAll('input[name="janta[]"]:checked').length > 0;
-            let almocoSelected = document.querySelectorAll('input[name="almoco[]"]:checked').length > 0;
-
-            if (!jantaSelected && !almocoSelected) {
-                alert("Por favor, selecione pelo menos um dia para a compra.");
+            console.log("Janta Selecionada:", Array.from(jantaSelected).map(input => input.value));
+            console.log("Almoço Selecionado:", Array.from(almocoSelected).map(input => input.value));
+    
+            
+            if (jantaSelected.length === 0 && almocoSelected.length === 0) {
+                alert("por favor, selecione pelo menos um dia para a compra");
                 return false;  
             }
-
+    
+            
+            alert("enviando o formulario!");
             return true;  
         }
     </script>
