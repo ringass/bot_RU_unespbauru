@@ -14,13 +14,13 @@ def adicionar_usuario_view():
     username = request.form['username']
     password = request.form['password']
     preference = request.form['preference']
-    janta = request.form.getlist('janta[]')  # Pega a lista de dias selecionados para jantar
-    almoco = request.form.getlist('almoco[]')  # Pega a lista de dias selecionados para almoço
+    janta = request.form.getlist('janta[]')   
+    almoco = request.form.getlist('almoco[]')  
     
-    print("Janta selecionada:", janta)  # Verifique o que é impresso no console
-    print("Almoço selecionado:", almoco)  # Verifique o que é impresso no console
+    print("Janta selecionada:", janta)  
+    print("Almoço selecionado:", almoco)  
     
-    inserir_usuario(username, password, preference, almoco, janta)
+    inserir_usuario(username, password, preference, janta, almoco)
     
     return redirect(url_for('index'))
 

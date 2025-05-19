@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright
 from bd import show_usuario
 import time
+import requests
 def pagina(page):
     
     page.goto("https://sistemas.unesp.br/")
@@ -26,18 +27,13 @@ def verifica_dinheiro(page, almoco, janta):
     preco = float(preco_limpo)
 
     
-    dias_almoco = len(almoco) if almoco else 0
-    dias_janta = len(janta) if janta else 0
-    dias_totais = dias_almoco + dias_janta
-    
-    
-    preco_total = dias_totais * 2.50
+    preco_total = 2.50
     
     if preco >= preco_total:
-        print(f"Saldo suficiente para {dias_totais} refeições: R$ {preco:.2f} disponível, R$ {preco_total:.2f} necessário.")
+        print(f"Saldo suficiente: R$ {preco:.2f} disponível")
         return True
     else:
-        print(f"Saldo insuficiente: R$ {preco:.2f} disponível, R$ {preco_total:.2f} necessário.")
+        print(f"Saldo insuficiente: R$ {preco:.2f} disponível")
         return False
         
 
@@ -49,17 +45,15 @@ def acessar_RU(page, preferencia, almoco, janta):
     # page.click('[href="/ru-bauru/dashboard/dashboard.do"]')
 
     
-    
     if verifica_dinheiro(page, almoco, janta):
         print("Saldo suficiente para continuar.")
         
-        page.wait_for_selector('[href="/ru-bauru/cliente/selecionarFilaPorPeriodoDeAtendimento.do"]', timeout=10000)
-        page.click('[href="/ru-bauru/cliente/selecionarFilaPorPeriodoDeAtendimento.do"]')
-        time.sleep(2)
-        
-        comprar_fila(page, preferencia, almoco, janta)     
-    else:
-        print("Recarregar saldo antes de prosseguir.")
+    page.wait_for_selector('[href="/ru-bauru/cliente/selecionarFilaPorPeriodoDeAtendimento.do"]', timeout=10000)
+    page.click('[href="/ru-bauru/cliente/selecionarFilaPorPeriodoDeAtendimento.do"]')
+    time.sleep(2)
+    
+    comprar_fila(page, preferencia, almoco, janta)     
+    
 
 def comprar_refeicao(page, periodo):
     
@@ -83,7 +77,7 @@ def comprar_refeicao(page, periodo):
     
     page.wait_for_selector("#form\\:informacoes", state="visible", timeout=None)
 
-def comprar_fila(page, periodo, almoco, janta):
+def comprar_fila(page, periodo):
     periodo = periodo.lower()
 
     if periodo in ["almoco", "almoço"]:
@@ -93,16 +87,43 @@ def comprar_fila(page, periodo, almoco, janta):
             comprar_refeicao(page, "janta")
     
     elif periodo in ["jantar", "janta"]:
+        
         comprar_refeicao(page, "janta")
         
         if almoco:  
             comprar_refeicao(page, "almoco")  
         
+
+
+def get_cf_cookies(url):
+    response = requests.get(f"http://localhost:8000/cookies?url={url}")
+    data = response.json()
+    cookies = data.get("cookies", {})
+    
+    cf_cookies = []
+    for name, value in cookies.items():
+        cf_cookies.append({
+            'name': name,
+            'value': value,
+            'domain': 'sistemas.unesp.br',
+            'path': '/',
+            'httpOnly': False,
+            'secure': True,
+            'sameSite': 'Lax'
+        })
+    return cf_cookies
+        
   
 def main(username: str, password: str, preferencia: str, almoco, janta):
     with sync_playwright() as p:
+        
         browser = p.firefox.launch(headless=False)
-        page = browser.new_page()
+        context = browser.new_context()
+        page = context.new_page()
+
+        url = "https://sistemas.unesp.br/"
+        cf_cookies = get_cf_cookies(url)
+        context.add_cookies(cf_cookies)
 
         pagina(page)  
         login(page, username, password)  

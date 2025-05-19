@@ -35,8 +35,9 @@ def create_table():
         id SERIAL PRIMARY KEY,
         username TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
-        preference_almoco TEXT[] DEFAULT NULL,  
-        preference_janta TEXT[] DEFAULT NULL     
+        preference TEXT NOT NULL,
+        janta TEXT[] DEFAULT NULL,  
+        almoco TEXT[] DEFAULT NULL     
     )
 ''')
     
@@ -90,10 +91,11 @@ def show_usuario():
 
 
 
-usuarios = show_usuario()
-if usuarios:
-    for usuario, senha, preferencia, almoco, janta in usuarios:  
-        print(f"Usuário: {usuario}, Senha: {senha}, Preferência: {preferencia}, Almoco: {almoco}, Janta: {janta}")
-else:
-    print("Nenhum usuário encontrado.")
+# usuarios = show_usuario()
+# if usuarios:
+#     for usuario, senha, preferencia, almoco, janta in usuarios:  
+#         print(f"Usuário: {usuario}, Senha: {senha}, Preferência: {preferencia}, Almoco: {almoco}, Janta: {janta}")
+# else:
+#     print("Nenhum usuário encontrado.")
 
+create_table();
